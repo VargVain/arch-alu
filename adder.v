@@ -9,8 +9,8 @@ module Add(
 	wire[31:0] tmp;
 	wire g;
 
-	adder16 adder16_1(a[15:0], b[15:0], 1'b0, tmp[15:0], , ,g);
-	adder16 adder16_2(a[31:16], b[31:16], g, tmp[31:16], , ,);
+	adder16 adder16_1(a[15:0], b[15:0], 1'b0, tmp[15:0], ,g);
+	adder16 adder16_2(a[31:16], b[31:16], g, tmp[31:16], ,);
 
 	always @(*) #121 sum = tmp;
 
@@ -34,7 +34,6 @@ module adder4(
     assign C[1] = G[0] | (P[0] & C[0]);
     assign C[2] = G[1] | (P[1] & (G[0] | (P[0] & C[0])));
     assign C[3] = G[2] | (P[2] & (G[1] | (P[1] & (G[0] | (P[0] & C[0])))));
-    //assign C[4] = G[3] | (P[3] & (G[2] | (P[2] & (G[1] | (P[1] & (G[0] | (P[0] & C[0])))))));
 
     assign sum[0] = P[0] ^ C[0];
     assign sum[1] = P[1] ^ C[1];
@@ -51,7 +50,6 @@ module adder16(
 	input		[15:0]			b,
 	input						c_in,
 	output		[15:0]			sum,
-	output						c_out,
 	output						Px,
 	output						Gx
 );
@@ -63,7 +61,6 @@ module adder16(
 	assign C[1] = G[0] | (P[0] & C[0]);
     assign C[2] = G[1] | (P[1] & (G[0] | (P[0] & C[0])));
     assign C[3] = G[2] | (P[2] & (G[1] | (P[1] & (G[0] | (P[0] & C[0])))));
-    assign C[4] = G[3] | (P[3] & (G[2] | (P[2] & (G[1] | (P[1] & (G[0] | (P[0] & C[0])))))));
 
 	adder4 adder4_1(a[3:0], b[3:0], C[0], sum[3:0], P[0], G[0]);
 	adder4 adder4_2(a[7:4], b[7:4], C[1], sum[7:4], P[1], G[1]);
@@ -72,7 +69,5 @@ module adder16(
 
 	assign Px = P[0] & P[1] & P[2] & P[3];
 	assign Gx = G[3] ^ (P[3] & G[2]) ^ (P[3] & P[2] & G[1]) ^ (P[3] & P[2] & P[1] & G[0]);
-
-	assign c_out = C[4];
 
 endmodule
